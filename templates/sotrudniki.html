@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Сотрудники - Газпром добыча Уренгой{% endblock %}
+
+{% block content %}
+<style>
+    .employees-hero {
+        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin: -20px -20px 40px -20px;
+        text-align: center;
+    }
+
+    .employees-hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .employees-hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .gazprom-card {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 82, 156, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .gazprom-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 82, 156, 0.15);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .employee-photo {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border: 3px solid #00529c;
+        border-radius: 10px;
+    }
+
+    .no-photo {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border: 3px solid #e9ecef;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-title {
+        color: #00529c;
+        font-weight: bold;
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    .employee-info {
+        color: #000000;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .employee-info strong {
+        color: #00529c;
+        font-weight: 600;
+    }
+
+    .smus-badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-top: 10px;
+        display: inline-block;
+    }
+
+    .header-section {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 0 15px;
+    }
+
+    .header-section h2 {
+        color: #00529c;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .count-badge {
+        background: linear-gradient(45deg, #00529c, #0078d7);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+</style>
+
+<div class="employees-hero">
+    <div class="container">
+        <h1><i class="fas fa-users me-3"></i>Молодые специалисты</h1>
+        <p>Профессиональный состав компании</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header-section">
+        <h2>Сотрудники</h2>
+        <span class="count-badge">Всего: {{ employees|length }}</span>
+    </div>
+
+    <div class="row">
+        {% for employee in employees %}
+        <div class="col-lg-6 mb-4">
+            <div class="card gazprom-card h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            {% if employee.photo %}
+                                <img src="{{ employee.photo.url }}" class="employee-photo" alt="Фото {{ employee.user.get_full_name }}">
+                            {% else %}
+                                <div class="no-photo">
+                                    <i class="fas fa-user fa-2x text-muted"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-8">
+                            <h5 class="card-title">{{ employee.user.get_full_name }}</h5>
+                            <div class="employee-info">
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-briefcase me-1"></i>Должность:</strong><br>
+                                    {{ employee.position.name }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-building me-1"></i>Филиал:</strong><br>
+                                    {{ employee.filial.name }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-phone me-1"></i>Телефон:</strong><br>
+                                    {{ employee.internal_phone }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-birthday-cake me-1"></i>Дата рождения:</strong><br>
+                                    {{ employee.birth_date }}
+                                </p>
+                            </div>
+                            {% if employee.is_smus %}
+                                <span class="smus-badge">
+                                    <i class="fas fa-star me-1"></i>Член СМУС
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="text-muted">
+                <i class="fas fa-users fa-3x mb-3"></i>
+                <h4>Сотрудники не найдены</h4>
+                <p>Нет данных о молодых специалистах</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

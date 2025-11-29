@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 82, 156, 0.8), rgba(0, 82, 156, 0.9)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        margin: -20px -20px 50px -20px;
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .hero-section p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+
+    .stats-section {
+        margin-top: -30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .gazprom-card {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 82, 156, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+
+    .gazprom-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 82, 156, 0.3);
+    }
+
+    .gazprom-card .card-body {
+        padding: 30px 20px;
+    }
+
+    .gazprom-card h3 {
+        color: #00529c;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .gazprom-card p {
+        color: #666;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-gazprom {
+        background: linear-gradient(45deg, #00529c, #0078d7);
+        border: none;
+        border-radius: 25px;
+        padding: 10px 25px;
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gazprom:hover {
+        background: linear-gradient(45deg, #0078d7, #00529c);
+        transform: scale(1.05);
+        color: white;
+    }
+
+    .welcome-text {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .welcome-text h2 {
+        color: #00529c;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="container">
+        <h1>Добро пожаловать в систему учета молодых специалистов!</h1>
+        <p>ООО "Газпром добыча Уренгой"</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="welcome-text">
+        <h2>Корпоративная система управления</h2>
+        <p class="lead">Эффективное решение для учета и развития молодых специалистов компании</p>
+    </div>
+
+    <div class="row justify-content-center stats-section">
+        <div class="col-md-4 mb-4">
+            <div class="card gazprom-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x mb-3" style="color: #00529c;"></i>
+                    <h3>{{ employees_count }}</h3>
+                    <p>Сотрудников в системе</p>
+                    <a href="{% url 'sotrudniki' %}" class="btn btn-gazprom">
+                        <i class="fas fa-arrow-right me-2"></i>Перейти
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card gazprom-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-alt fa-3x mb-3" style="color: #00529c;"></i>
+                    <h3>{{ events_count }}</h3>
+                    <p>Мероприятий запланировано</p>
+                    <a href="{% url 'meropriyatiya' %}" class="btn btn-gazprom">
+                        <i class="fas fa-arrow-right me-2"></i>Перейти
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Добавьте Font Awesome в base.html -->
+<script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+{% endblock %}

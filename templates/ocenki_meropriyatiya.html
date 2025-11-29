@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block title %}Оценки СМУС - Газпром добыча Уренгой{% endblock %}
+
+{% block content %}
+<style>
+    .ratings-hero {
+        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 50px 0;
+        margin: -20px -20px 40px -20px;
+        text-align: center;
+    }
+
+    .ratings-hero h1 {
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .ratings-hero .event-name {
+        font-size: 1.4rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+
+    .event-info-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 82, 156, 0.1);
+        border: none;
+        margin-bottom: 30px;
+    }
+
+    .event-info-card .card-body {
+        padding: 25px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #00529c, #0078d7);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .info-content h5 {
+        color: #00529c;
+        font-weight: 600;
+        margin-bottom: 5px;
+        font-size: 0.95rem;
+    }
+
+    .info-content p {
+        color: #666;
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 82, 156, 0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .table thead {
+        background: linear-gradient(45deg, #00529c, #0078d7);
+    }
+
+    .table thead th {
+        color: white;
+        border: none;
+        padding: 18px 15px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(0, 82, 156, 0.03);
+    }
+
+    .table td {
+        padding: 16px 15px;
+        vertical-align: middle;
+        border-color: #f8f9fa;
+    }
+
+    .score-badge {
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        min-width: 50px;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .position-badge {
+        background: linear-gradient(45deg, #6f42c1, #e83e8c);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .average-rating-card {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        text-align: center;
+        padding: 25px;
+    }
+
+    .average-rating-card h4 {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .average-score {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+
+    .comment-cell {
+        max-width: 300px;
+        word-wrap: break-word;
+    }
+
+    .member-name {
+        font-weight: 600;
+        color: #00529c;
+    }
+</style>
+
+<div class="ratings-hero">
+    <div class="container">
+        <h1><i class="fas fa-star me-3"></i>Оценки СМУС</h1>
+        <div class="event-name">Мероприятие: {{ event.name }}</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Информация о мероприятии -->
+    <div class="event-info-card">
+        <div class="card-body">
+            <h5 class="card-title mb-4" style="color: #00529c;">
+                <i class="fas fa-info-circle me-2"></i>Информация о мероприятии
+            </h5>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Дата проведения</h5>
+                        <p>{{ event.date|date:"j E Y г." }}</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Направление</h5>
+                        <p>{{ event.get_direction_display }}</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Организатор</h5>
+                        <p>{{ event.creator }}</p>
+                    </div>
+                </div>
+                {% if event.description %}
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h5>Описание</h5>
+                        <p>{{ event.description }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Таблица оценок -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user me-2"></i>Член СМУС</th>
+                        <th><i class="fas fa-briefcase me-2"></i>Должность в СМУС</th>
+                        <th><i class="fas fa-chart-line me-2"></i>Оценка (0-10)</th>
+                        <th><i class="fas fa-comment me-2"></i>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rating in ratings %}
+                    <tr>
+                        <td>
+                            <span class="member-name">{{ rating.smus.employee.user.get_full_name }}</span>
+                        </td>
+                        <td>
+                            <span class="position-badge">
+                                <i class="fas
+                                    {% if rating.smus.position == 'predsedatel' %}fa-crown
+                                    {% elif rating.smus.position == 'zamestitel' %}fa-star
+                                    {% else %}fa-user-check{% endif %} me-1"></i>
+                                {{ rating.smus.get_position_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="score-badge
+                                {% if rating.score >= 8 %}bg-success
+                                {% elif rating.score >= 5 %}bg-warning text-dark
+                                {% else %}bg-danger text-white{% endif %}">
+                                {{ rating.score }}
+                            </span>
+                        </td>
+                        <td class="comment-cell">
+                            {% if rating.comment %}
+                                <i class="fas fa-quote-left text-muted me-1"></i>
+                                {{ rating.comment }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                            <i class="fas fa-clipboard-list fa-2x mb-3"></i>
+                            <br>
+                            Оценки не найдены
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Средняя оценка -->
+    <div class="average-rating-card">
+        <h4><i class="fas fa-chart-bar me-2"></i>Средняя экспертная оценка</h4>
+        <div class="average-score">{{ srednyaya_ocenka|floatformat:2 }}/10</div>
+        <p class="mb-0">На основе оценок членов СМУС</p>
+    </div>
+</div>
+{% endblock %}

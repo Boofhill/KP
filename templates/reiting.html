@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}Рейтинг - Газпром добыча Уренгой{% endblock %}
+
+{% block content %}
+<style>
+    .rating-hero {
+        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin: -20px -20px 40px -20px;
+        text-align: center;
+    }
+
+    .rating-hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .rating-hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 82, 156, 0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .table thead {
+        background: #f8f9fa;
+    }
+
+    .table thead th {
+        color: #000000;
+        border: none;
+        padding: 18px 15px;
+        font-weight: 600;
+        font-size: 1rem;
+        border-bottom: 2px solid #00529c;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(0, 82, 156, 0.05);
+    }
+
+    .place-cell {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .medal-1 {
+        color: #FFD700;
+        font-size: 1.5rem;
+    }
+
+    .medal-2 {
+        color: #C0C0C0;
+        font-size: 1.5rem;
+    }
+
+    .medal-3 {
+        color: #CD7F32;
+        font-size: 1.5rem;
+    }
+
+    .employee-name {
+        color: #00529c;
+        font-weight: 600;
+    }
+
+    .events-badge {
+        background: #6c757d;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+    }
+
+    .score-badge {
+        background: #28a745;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 15px;
+        font-weight: bold;
+    }
+
+    .achievement-badge {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .leader-badge {
+        background: #dc3545;
+        color: white;
+    }
+
+    .active-badge {
+        background: #ffc107;
+        color: #000;
+    }
+
+    .participant-badge {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .table td {
+        padding: 15px 12px;
+        vertical-align: middle;
+        color: #000000;
+    }
+</style>
+
+<div class="rating-hero">
+    <div class="container">
+        <h1>Конкурсный список молодых специалистов</h1>
+        <p>Рейтинг активности и достижений сотрудников</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Место</th>
+                        <th>Сотрудник</th>
+                        <th>Филиал</th>
+                        <th>Должность</th>
+                        <th>Кол-во мероприятий</th>
+                        <th>Итоговый балл</th>
+                        <th>Достижения</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for zapis in rating %}
+                    <tr>
+                        <td class="place-cell">
+                            {% if forloop.counter == 1 %}
+                                <span class="medal-1">🥇</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="medal-2">🥈</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="medal-3">🥉</span>
+                            {% else %}
+                                {{ forloop.counter }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong class="employee-name">{{ zapis.employee.user.get_full_name }}</strong>
+                        </td>
+                        <td>{{ zapis.employee.filial.name }}</td>
+                        <td>{{ zapis.employee.position.name }}</td>
+                        <td>
+                            <span class="events-badge">{{ zapis.kolichestvo_meropriyatiy }}</span>
+                        </td>
+                        <td>
+                            <span class="score-badge">{{ zapis.itogovy_ball }}</span>
+                        </td>
+                        <td>
+                            {% if zapis.itogovy_ball >= 5 %}
+                                <span class="achievement-badge leader-badge">Лидер</span>
+                            {% elif zapis.itogovy_ball >= 3 %}
+                                <span class="achievement-badge active-badge">Активный</span>
+                            {% else %}
+                                <span class="achievement-badge participant-badge">Участник</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <h5>Рейтинг пуст</h5>
+                            <p>Нет данных для отображения рейтинга</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

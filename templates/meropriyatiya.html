@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Мероприятия - Газпром добыча Уренгой{% endblock %}
+
+{% block content %}
+<style>
+    .events-hero {
+        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin: -20px -20px 40px -20px;
+        text-align: center;
+    }
+
+    .events-hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .events-hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 82, 156, 0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+
+    .table thead {
+        background: #f8f9fa;
+    }
+
+    .table thead th {
+        color: #000000;
+        border: none;
+        padding: 15px 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #00529c;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(0, 82, 156, 0.05);
+    }
+
+    .badge {
+        font-size: 0.8em;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .btn-evaluation {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        border-radius: 20px;
+        padding: 6px 15px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-evaluation:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+
+    .rating-badge {
+        font-size: 0.9em;
+        padding: 8px 12px;
+    }
+
+    .direction-badge {
+        background: linear-gradient(45deg, #6f42c1, #e83e8c);
+        color: white;
+    }
+
+    .no-data-badge {
+        background: #6c757d;
+        color: white;
+    }
+
+    .table td {
+        padding: 15px 12px;
+        vertical-align: middle;
+        border-color: #f8f9fa;
+        color: #000000;
+    }
+
+    .date-column {
+        min-width: 180px;
+        width: 180px;
+    }
+
+    .name-column {
+        min-width: 200px;
+    }
+
+    .direction-column {
+        min-width: 150px;
+    }
+
+    .year-column {
+        min-width: 80px;
+        width: 80px;
+    }
+
+    .creator-column {
+        min-width: 150px;
+    }
+
+    .rating-column {
+        min-width: 140px;
+        width: 140px;
+    }
+
+    .actions-column {
+        min-width: 120px;
+        width: 120px;
+    }
+</style>
+
+<div class="events-hero">
+    <div class="container">
+        <h1><i class="fas fa-calendar-alt me-3"></i>Мероприятия</h1>
+        <p>Управление и оценка корпоративных мероприятий</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="name-column"><i class="fas fa-heading me-2"></i>Название</th>
+                        <th class="date-column"><i class="fas fa-calendar-day me-2"></i>Дата проведения</th>
+                        <th class="direction-column"><i class="fas fa-compass me-2"></i>Направление</th>
+                        <th class="year-column"><i class="fas fa-calendar-year me-2"></i>Год</th>
+                        <th class="creator-column"><i class="fas fa-user me-2"></i>Создатель</th>
+                        <th class="rating-column"><i class="fas fa-chart-line me-2"></i>Экспертная оценка</th>
+                        <th class="actions-column"><i class="fas fa-cogs me-2"></i>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>
+                            <strong>{{ event.name }}</strong>
+                        </td>
+                        <td class="date-column">
+                            <i class="fas fa-clock me-1 text-muted"></i>
+                            {{ event.date|date:"j E Y г." }}
+                        </td>
+                        <td>
+                            <span class="badge direction-badge">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ event.get_direction_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-primary fw-bold">{{ event.year }}</span>
+                        </td>
+                        <td>
+                            <i class="fas fa-user-edit me-1 text-muted"></i>
+                            {{ event.creator }}
+                        </td>
+                        <td>
+                            {% if event.srednyaya_ocenka %}
+                                <span class="badge bg-success rating-badge">
+                                    <i class="fas fa-star me-1"></i>
+                                    {{ event.srednyaya_ocenka|floatformat:1 }}/10
+                                </span>
+                            {% else %}
+                                <span class="badge no-data-badge">
+                                    <i class="fas fa-star me-1"></i>
+                                    Нет оценок
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'ocenki_meropriyatiya' event.id %}" class="btn btn-evaluation btn-sm">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                Оценки
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            <i class="fas fa-calendar-times fa-2x mb-3"></i>
+                            <br>
+                            Мероприятия не найдены
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

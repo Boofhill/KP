@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Газпром добыча Уренгой{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .gazprom-header {
+            background: linear-gradient(135deg, #0047AB, #0066CC);
+            color: white;
+        }
+        .gazprom-card {
+            border-left: 4px solid #0047AB;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark gazprom-header">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'glavnaya' %}">
+                🏢 Газпром добыча Уренгой
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'sotrudniki' %}">Сотрудники</a>
+                <a class="nav-link" href="{% url 'meropriyatiya' %}">Мероприятия</a>
+                <a class="nav-link" href="{% url 'smus' %}">СМУС</a>
+                <a class="nav-link" href="{% url 'reiting' %}">Рейтинг</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

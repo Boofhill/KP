@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему - Газпром добыча Уренгой</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #00529c 0%, #0078d7 50%, #003366 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg') no-repeat center center;
+            background-size: cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 82, 156, 0.3);
+            padding: 50px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .gazprom-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #00529c, #0078d7);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 82, 156, 0.3);
+        }
+
+        .gazprom-logo::before {
+            content: 'Г';
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .logo-section h1 {
+            color: #00529c;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .logo-section p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00529c;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #00529c;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 82, 156, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        .btn-login {
+            background: linear-gradient(45deg, #00529c, #0078d7);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 82, 156, 0.3);
+            background: linear-gradient(45deg, #0078d7, #00529c);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .additional-links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .forgot-password {
+            color: #00529c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #0078d7;
+            text-decoration: underline;
+        }
+
+        .security-notice {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid #ffcdd2;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            color: #666;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container pulse-animation">
+        <div class="logo-section">
+            <div class="gazprom-logo"></div>
+            <h1>Газпром добыча Уренгой</h1>
+            <p>Система учета молодых специалистов</p>
+        </div>
+
+        <!-- Сообщения об ошибках -->
+        {% if form.errors %}
+        <div class="error-message">
+            Неверное имя пользователя или пароль. Попробуйте снова.
+        </div>
+        {% endif %}
+
+        {% if next %}
+            {% if user.is_authenticated %}
+            <div class="error-message">
+                У вашей учетной записи нет доступа к этой странице.
+            </div>
+            {% endif %}
+        {% endif %}
+
+        <form class="login-form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Имя пользователя</label>
+                <input type="text"
+                       id="id_username"
+                       name="username"
+                       class="form-control"
+                       placeholder="Введите ваш логин"
+                       required
+                       value="{{ form.username.value|default:'' }}">
+                <div class="input-icon">👤</div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Пароль</label>
+                <input type="password"
+                       id="id_password"
+                       name="password"
+                       class="form-control"
+                       placeholder="Введите ваш пароль"
+                       required>
+                <div class="input-icon">🔒</div>
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <button type="submit" class="btn-login">
+                ВХОД В СИСТЕМУ
+            </button>
+        </form>
+
+        <div class="additional-links">
+
+        </div>
+
+        <div class="security-notice">
+            Для доступа к системе требуется корпоративная учетная запись
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            const btn = this.querySelector('.btn-login');
+            const originalText = btn.textContent;
+
+            btn.textContent = 'ВХОД...';
+            btn.disabled = true;
+
+            // Позволяем форме отправиться, но меняем текст кнопки
+            setTimeout(() => {
+                if (btn.disabled) {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            }, 2000);
+        });
+
+        // Анимация при фокусе на поля ввода
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+            });
+
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Автофокус на поле username
+        document.getElementById('id_username').focus();
+    </script>
+</body>
+</html>

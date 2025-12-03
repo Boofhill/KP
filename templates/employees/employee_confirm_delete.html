@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление сотрудника - {{ employee.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<style>
+    .delete-hero {
+        background: linear-gradient(rgba(220, 53, 69, 0.9), rgba(200, 35, 51, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin: -20px -20px 40px -20px;
+        text-align: center;
+    }
+
+    .delete-hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .delete-card {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.1);
+        padding: 40px;
+        max-width: 500px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .delete-message {
+        color: #dc3545;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    .employee-name {
+        font-weight: bold;
+        color: #00529c;
+    }
+
+    .btn-delete {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+    }
+
+    .btn-delete:hover {
+        background: linear-gradient(45deg, #c82333, #dc3545);
+        transform: scale(1.05);
+    }
+
+    .btn-cancel-delete {
+        background: linear-gradient(45deg, #6c757d, #5a6268);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel-delete:hover {
+        background: linear-gradient(45deg, #5a6268, #6c757d);
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="delete-hero">
+    <div class="container">
+        <h1><i class="fas fa-exclamation-triangle me-3"></i>Подтверждение удаления</h1>
+        <p>Это действие нельзя отменить</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="delete-card">
+        <div class="delete-message">
+            <p>Вы действительно хотите удалить сотрудника <span class="employee-name">{{ employee.user.get_full_name }}</span>?</p>
+            <p>Все связанные данные будут потеряны.</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">
+                <i class="fas fa-trash me-2"></i>Удалить
+            </button>
+            <a href="{% url 'sotrudniki' %}" class="btn-cancel-delete">
+                <i class="fas fa-arrow-left me-2"></i>Отмена
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

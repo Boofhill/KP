@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление сотрудника - Газпром добыча Уренгой{% endblock %}
+
+{% block content %}
+<style>
+    .form-hero {
+        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        color: white;
+        padding: 40px 0;
+        margin: -20px -20px 0 -20px;
+        text-align: center;
+    }
+    .form-hero h1 { font-size: 2rem; font-weight: bold; margin: 0; }
+    .form-container { max-width: 600px; margin: 40px auto; }
+    .gazprom-form { background: white; border-radius: 15px; box-shadow: 0 8px 25px rgba(0, 82, 156, 0.1); padding: 30px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { color: #00529c; font-weight: bold; margin-bottom: 8px; display: block; }
+    .form-control { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1rem; transition: border-color 0.3s; }
+    .form-control:focus { border-color: #00529c; box-shadow: 0 0 0 0.2rem rgba(0, 82, 156, 0.25); }
+    .btn-gazprom { background: linear-gradient(45deg, #00529c, #0078d7); color: white; padding: 12px 24px; border: none; border-radius: 20px; font-weight: 600; transition: all 0.3s; margin-right: 10px; }
+    .btn-gazprom:hover { background: linear-gradient(45deg, #0078d7, #00529c); transform: scale(1.05); color: white; }
+    .btn-cancel { background: #6c757d; }
+    .btn-cancel:hover { background: #5a6268; }
+    .errorlist { color: #dc3545; list-style: none; padding: 0; }
+    .errorlist li { background: #f8d7da; border: 1px solid #f5c6cb; padding: 8px; border-radius: 5px; margin-bottom: 5px; }
+    .alert { padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .form-check-label { margin-left: 8px; }  /* Для чекбокса */
+</style>
+
+<div class="form-hero">
+    <h1><i class="fas fa-user-plus me-3"></i>Добавление сотрудника</h1>
+</div>
+
+<div class="form-container">
+    <div class="gazprom-form">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label">ФИО:</label>
+                {{ form.fio|add_class:"form-control" }}  <!-- Если добавили поле fio в форму -->
+                <!-- Или если ФИО из User: <input type="text" name="fio" class="form-control" placeholder="Иванов Иван Иванович" required> -->
+                {% if form.fio.errors %}{{ form.fio.errors }}{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Должность:</label>
+                {{ form.position }}
+                {% if form.position.errors %}{{ form.position.errors }}{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Филиал:</label>
+                {{ form.filial }}
+                {% if form.filial.errors %}{{ form.filial.errors }}{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Внутренний телефон:</label>
+                {{ form.internal_phone }}
+                {% if form.internal_phone.errors %}{{ form.internal_phone.errors }}{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Дата рождения:</label>
+                {{ form.birth_date }}
+                {% if form.birth_date.errors %}{{ form.birth_date.errors }}{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Фото:</label>
+                {{ form.photo }}
+                {% if form.photo.errors %}{{ form.photo.errors }}{% endif %}
+                <small class="form-text text-muted">Загрузите фото (опционально)</small>
+            </div>
+
+            <div class="form-group form-check">
+                {{ form.is_smus }}
+                {{ form.is_smus.label_tag }}
+                {% if form.is_smus.errors %}{{ form.is_smus.errors }}{% endif %}
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn-gazprom">
+                    <i class="fas fa-plus me-2"></i>Добавить сотрудника
+                </button>
+                <a href="{% url 'employee_list' %}" class="btn-gazprom btn-cancel">  <!-- Замените на ваш URL списка -->
+                    <i class="fas fa-times me-2"></i>Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

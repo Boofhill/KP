@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% load i18n %}
+{% load static %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Газпром добыча Уренгой{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/gazprom.svg' %}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">  <!-- Для иконок -->
     <style>
+
         .gazprom-header {
             background: linear-gradient(135deg, #0047AB, #0066CC);
             color: white;
@@ -13,19 +18,148 @@
         .gazprom-card {
             border-left: 4px solid #0047AB;
         }
+
+        /* CSS для кнопки выхода (интегрировано с Bootstrap) */
+        .logout-button {
+            transition: all 0.3s ease;  /* Плавный переход */
+        }
+        .logout-button:hover {
+            background-color: #ffffff !important;  /* Белый фон при наведении */
+            color: #0047AB !important;  /* Синий текст для контраста */
+            border-color: #ffffff !important;  /* Белая граница */
+        }
+
+        /* Новые стили для настроек */
+        .settings-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 20px;  /* Отступ от других элементов navbar */
+        }
+
+        .settings-bar .btn {
+            padding: 6px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.85rem;
+            transition: background 0.3s ease, border 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .settings-bar .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .settings-bar .btn.active {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: #ffffff;
+            color: #0047AB;
+            font-weight: bold;
+        }
+
+        .settings-bar .btn i {
+            font-size: 1.1em;
+        }
+
+        /* Темная тема для всего body */
+        .dark-theme {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .dark-theme .gazprom-header {
+            background: linear-gradient(135deg, #002855, #004080);  /* Темнее синий */
+        }
+
+        .dark-theme .navbar-brand, .dark-theme .nav-link {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .settings-bar .btn {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.7);
+            color: #ffffff;
+        }
+
+        .dark-theme .settings-bar .btn.active {
+            background: rgba(255, 255, 255, 0.5);
+            color: #002855;
+        }
+
+        .dark-theme .gazprom-card {
+            background: #1e1e1e;
+            color: #ffffff;
+            border-left-color: #004080;
+        }
+
+        /* Версия для слабовидящих: черно-белый фильтр и увеличение */
+        .accessible-mode {
+            font-size: 1.5em !important;  /* Увеличение шрифтов */
+            filter: grayscale(100%) !important;  /* Черно-белый фильтр для всего */
+        }
+
+        .accessible-mode .gazprom-card {
+            border: 2px solid #000 !important;
+            box-shadow: none !important;
+        }
+
+        .accessible-mode .btn, .accessible-mode .logout-button {
+            background: #000 !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+            font-weight: bold !important;
+        }
+
+        .accessible-mode .navbar-brand, .accessible-mode .nav-link {
+            font-weight: bold !important;
+            color: #fff !important;
+        }
+
+        .accessible-mode .settings-bar .btn {
+            font-weight: bold !important;
+            color: #fff !important;
+        }
     </style>
 </head>
-<body>
+<body class="{% if request.session.theme == 'dark' %}dark-theme{% endif %} {% if request.session.accessible == 'true' %}accessible-mode{% endif %}">
     <nav class="navbar navbar-expand-lg navbar-dark gazprom-header">
         <div class="container">
             <a class="navbar-brand" href="{% url 'glavnaya' %}">
-                🏢 Газпром добыча Уренгой
+                Газпром добыча Уренгой
             </a>
             <div class="navbar-nav">
-                <a class="nav-link" href="{% url 'sotrudniki' %}">Сотрудники</a>
-                <a class="nav-link" href="{% url 'meropriyatiya' %}">Мероприятия</a>
-                <a class="nav-link" href="{% url 'smus' %}">СМУС</a>
-                <a class="nav-link" href="{% url 'reiting' %}">Рейтинг</a>
+                <a class="nav-link" href="{% url 'sotrudniki' %}">{% trans "Сотрудники" %}</a>
+                <a class="nav-link" href="{% url 'meropriyatiya' %}">{% trans "Мероприятия" %}</a>
+                <a class="nav-link" href="{% url 'smus' %}">{% trans "СМУС" %}</a>
+                <a class="nav-link" href="{% url 'reiting' %}">{% trans "Рейтинг" %}</a>
+            </div>
+            <!-- Секция настроек интегрирована в navbar-nav -->
+            <div class="navbar-nav ms-auto">
+                <div class="settings-bar">
+                    <!-- Кнопки темы -->
+                    <button id="light-theme-btn" class="btn active" data-theme="light"><i class="bi bi-sun"></i></button>
+                    <button id="dark-theme-btn" class="btn" data-theme="dark"><i class="bi bi-moon"></i></button>
+
+                    <!-- Кнопки языка -->
+                    <button id="lang-ru-btn" class="btn {% if LANGUAGE_CODE == 'ru' %}active{% endif %}" data-lang="ru">RU</button>
+                    <button id="lang-en-btn" class="btn {% if LANGUAGE_CODE == 'en' %}active{% endif %}" data-lang="en">ENG</button>
+
+                    <!-- Кнопка доступности -->
+                    <button id="accessible-btn" class="btn"><i class="bi bi-eye"></i></button>
+                </div>
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}" class="d-inline ms-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light logout-button">{% trans "Выход" %}</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link ms-3" href="{% url 'login' %}">{% trans "Войти" %}</a>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -36,5 +170,71 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // JavaScript для переключения темы, языка и доступности
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const lightBtn = document.getElementById('light-theme-btn');
+            const darkBtn = document.getElementById('dark-theme-btn');
+            const ruBtn = document.getElementById('lang-ru-btn');
+            const enBtn = document.getElementById('lang-en-btn');
+            const accessibleBtn = document.getElementById('accessible-btn');
+
+            // Загрузка сохраненных настроек из localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedAccessible = localStorage.getItem('accessible') === 'true';
+
+            // Применение темы
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+                darkBtn.classList.add('active');
+                lightBtn.classList.remove('active');
+            } else {
+                lightBtn.classList.add('active');
+                darkBtn.classList.remove('active');
+            }
+
+            // Применение доступности
+            if (savedAccessible) {
+                body.classList.add('accessible-mode');
+            }
+
+            // Переключение темы
+            lightBtn.addEventListener('click', function() {
+                body.classList.remove('dark-theme');
+                lightBtn.classList.add('active');
+                darkBtn.classList.remove('active');
+                localStorage.setItem('theme', 'light');
+            });
+
+            darkBtn.addEventListener('click', function() {
+                body.classList.add('dark-theme');
+                darkBtn.classList.add('active');
+                lightBtn.classList.remove('active');
+                localStorage.setItem('theme', 'dark');
+            });
+
+            // Переключение языка (редирект с параметром)
+            ruBtn.addEventListener('click', function() {
+                window.location.href = window.location.pathname + '?lang=ru';
+            });
+
+            enBtn.addEventListener('click', function() {
+                window.location.href = window.location.pathname + '?lang=en';
+            });
+
+            // Переключение доступности
+            accessibleBtn.addEventListener('click', function() {
+                const isAccessible = body.classList.contains('accessible-mode');
+                if (isAccessible) {
+                    body.classList.remove('accessible-mode');
+                    localStorage.setItem('accessible', 'false');
+                } else {
+                    body.classList.add('accessible-mode');
+                    localStorage.setItem('accessible', 'true');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

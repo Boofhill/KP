@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление сотрудника - Газпром добыча Уренгой{% endblock %}
+
+{% block content %}
+<style>
+    .form-hero {
+        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 60px 0;
+        margin: -20px -20px 40px -20px;
+        text-align: center;
+    }
+
+    .form-hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .form-card {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 82, 156, 0.1);
+        padding: 40px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .form-group label {
+        color: #00529c;
+        font-weight: 600;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 10px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #00529c;
+        box-shadow: 0 0 5px rgba(0, 82, 156, 0.3);
+    }
+
+    .btn-submit {
+        background: linear-gradient(45deg, #00529c, #0078d7);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(45deg, #0078d7, #00529c);
+        transform: scale(1.05);
+    }
+
+    .btn-cancel {
+        background: linear-gradient(45deg, #6c757d, #5a6268);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: linear-gradient(45deg, #5a6268, #6c757d);
+        transform: scale(1.05);
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="form-hero">
+    <div class="container">
+        <h1><i class="fas fa-plus me-3"></i>Добавление сотрудника</h1>
+        <p>Заполните информацию о новом сотруднике</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger mt-1">
+                        {% for error in field.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save me-2"></i>Добавить сотрудника
+                </button>
+                <a href="{% url 'sotrudniki' %}" class="btn-cancel">
+                    <i class="fas fa-times me-2"></i>Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

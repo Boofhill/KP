@@ -45,6 +45,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -139,4 +140,24 @@ LOGOUT_REDIRECT_URL = '/'
 # Короткие сессии
 SESSION_COOKIE_AGE = 900  # 15 минут
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+
+
+
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+# Для определения языка из сессии
+LANGUAGE_SESSION_KEY = '_language'
+
+# Для хранения выбранного языка в сессии
+SESSION_COOKIE_AGE = 86400  # 24 часа
 SESSION_SAVE_EVERY_REQUEST = True

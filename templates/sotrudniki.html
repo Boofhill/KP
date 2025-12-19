@@ -4,275 +4,1719 @@
 
 {% block content %}
 <style>
-    .employees-hero {
-        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 60px 0;
-        margin: -20px -20px 40px -20px;
-        text-align: center;
+    :root {
+        --gazprom-dark: #003366;
+        --gazprom-primary: #00529c;
+        --gazprom-light: #0078d7;
+        --gazprom-accent: #0099ff;
+        --gazprom-cyan: #00bfff;
+        --gradient-primary: linear-gradient(135deg, #003366 0%, #00529c 50%, #0078d7 100%);
+        --gradient-secondary: linear-gradient(135deg, #00529c 0%, #0078d7 50%, #0099ff 100%);
+        --gradient-accent: linear-gradient(135deg, #0078d7 0%, #0099ff 50%, #00bfff 100%);
+        --gradient-card: linear-gradient(145deg, rgba(0, 82, 156, 0.15), rgba(0, 120, 215, 0.08));
+        --shadow-light: 0 8px 25px rgba(0, 51, 102, 0.1);
+        --shadow-medium: 0 12px 35px rgba(0, 51, 102, 0.15);
+        --shadow-heavy: 0 18px 45px rgba(0, 51, 102, 0.2);
+        --shadow-glow: 0 0 30px rgba(0, 153, 255, 0.3);
     }
 
-    .employees-hero h1 {
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-bottom: 10px;
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
-    .employees-hero p {
-        font-size: 1.2rem;
-        opacity: 0.9;
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
     }
 
-    .gazprom-card {
-        background: white;
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0, 82, 156, 0.1);
-        transition: all 0.3s ease;
-        height: 100%;
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+    }
+
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse {
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    .animate-gradient {
+        animation: gradientShift 5s ease infinite;
+        background-size: 200% 200%;
+    }
+
+    .main-container {
+        min-height: 100vh;
+        background: var(--gradient-primary);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        position: relative;
         overflow: hidden;
     }
 
-    .gazprom-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 82, 156, 0.15);
+    .animated-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0.4;
     }
 
-    .card-body {
-        padding: 25px;
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.3;
     }
 
-    .employee-photo {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border: 3px solid #00529c;
-        border-radius: 10px;
+    .blob-1 {
+        width: 600px;
+        height: 600px;
+        background: var(--gradient-accent);
+        top: -300px;
+        right: -150px;
     }
 
-    .no-photo {
-        width: 120px;
-        height: 120px;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border: 3px solid #e9ecef;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .blob-2 {
+        width: 500px;
+        height: 500px;
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-accent));
+        bottom: -200px;
+        left: -150px;
     }
 
-    .card-title {
-        color: #00529c;
-        font-weight: bold;
-        font-size: 1.3rem;
-        margin-bottom: 15px;
+    .glass-content {
+        position: relative;
+        z-index: 2;
+        padding: 40px 0;
     }
 
-    .employee-info {
-        color: #000000;
-        font-size: 0.95rem;
+    .employees-hero {
+        padding: 100px 0 60px;
+        text-align: center;
+        position: relative;
+    }
+
+    .employees-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(179, 220, 255, 0.9) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 10px rgba(0, 82, 156, 0.3);
+        letter-spacing: -0.5px;
+        animation: fadeIn 1s ease-out;
+    }
+
+    .employees-hero p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.4rem;
+        font-weight: 300;
+        letter-spacing: 0.8px;
         line-height: 1.6;
-    }
-
-    .employee-info strong {
-        color: #00529c;
-        font-weight: 600;
-    }
-
-    .smus-badge {
-        background: linear-gradient(45deg, #28a745, #20c997);
-        color: white;
-        padding: 6px 12px;
-        border-radius: 15px;
-        font-weight: 600;
-        font-size: 0.8rem;
-        margin-top: 10px;
-        display: inline-block;
+        max-width: 600px;
+        margin: 0 auto;
+        animation: fadeIn 1s ease-out 0.2s both;
     }
 
     .header-section {
+        background: rgba(0, 82, 156, 0.15);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 153, 255, 0.15);
+        border-radius: 30px;
+        box-shadow: var(--shadow-medium),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        padding: 30px 40px;
+        margin: 40px 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
-        padding: 0 15px;
+        animation: fadeIn 0.8s ease-out 0.4s both;
+        position: relative;
+        overflow: hidden;
     }
 
-    .header-section h2 {
-        color: #00529c;
-        font-weight: bold;
+    .header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0, 153, 255, 0.5), transparent);
+    }
+
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .header-title i {
+        font-size: 2.5rem;
+        color: var(--gazprom-accent);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .header-title h2 {
+        color: white;
+        font-weight: 700;
+        font-size: 2.2rem;
         margin: 0;
+        text-shadow: 0 2px 8px rgba(0, 51, 102, 0.3);
+    }
+
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        flex-wrap: wrap;
     }
 
     .count-badge {
-        background: linear-gradient(45deg, #00529c, #0078d7);
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-light));
         color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 1rem;
-    }
-
-    .btn-gazprom {
-        background: linear-gradient(45deg, #00529c, #0078d7);
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        margin-right: 5px;
-    }
-
-    .btn-gazprom:hover {
-        background: linear-gradient(45deg, #0078d7, #00529c);
-        color: white;
-        transform: scale(1.05);
-    }
-
-    .btn-danger-custom {
-        background: linear-gradient(45deg, #dc3545, #c82333);
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn-danger-custom:hover {
-        background: linear-gradient(45deg, #c82333, #dc3545);
-        color: white;
-        transform: scale(1.05);
-    }
-
-    .card-actions {
-        margin-top: 15px;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 10px 30px rgba(0, 82, 156, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
         display: flex;
-        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        animation: pulse 3s infinite;
+        border: 2px solid rgba(0, 153, 255, 0.3);
+    }
+
+    .filters-panel {
+        background: rgba(0, 82, 156, 0.15);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 153, 255, 0.15);
+        border-radius: 25px;
+        box-shadow: var(--shadow-light),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        padding: 25px 30px;
+        margin: 30px 0;
+        animation: fadeIn 0.8s ease-out 0.6s both;
+    }
+
+    .filters-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .filters-header h4 {
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
         gap: 10px;
     }
 
-    .access-denied {
-        color: #dc3545;
+    .filters-header h4 i {
+        color: var(--gazprom-accent);
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-label {
+        color: rgba(255, 255, 255, 0.9);
         font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        letter-spacing: 0.5px;
+    }
+
+    .filter-select {
+        width: 100%;
+        padding: 12px 20px;
+        background: rgba(0, 82, 156, 0.2);
+        border: 1px solid rgba(0, 153, 255, 0.3);
+        border-radius: 15px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        outline: none;
+        backdrop-filter: blur(10px);
+    }
+
+    .filter-select:hover {
+        background: rgba(0, 153, 255, 0.2);
+        border-color: rgba(0, 153, 255, 0.5);
+    }
+
+    .filter-select:focus {
+        border-color: var(--gazprom-accent);
+        box-shadow: 0 0 0 2px rgba(0, 153, 255, 0.3);
+    }
+
+    .filter-select option {
+        background: var(--gazprom-dark);
+        color: white;
+        padding: 10px;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .filter-button {
+        padding: 12px 25px;
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-light));
+        border: 2px solid rgba(0, 153, 255, 0.3);
+        border-radius: 15px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .filter-button:hover {
+        background: linear-gradient(135deg, var(--gazprom-light), var(--gazprom-accent));
+        border-color: rgba(0, 153, 255, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 82, 156, 0.3);
+    }
+
+    .filter-button.reset {
+        background: linear-gradient(135deg, rgba(108, 117, 125, 0.8), rgba(73, 80, 87, 0.6));
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .filter-button.reset:hover {
+        background: linear-gradient(135deg, rgba(73, 80, 87, 1), rgba(108, 117, 125, 0.8));
+    }
+
+    .filter-stats {
+        background: rgba(0, 153, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 153, 255, 0.2);
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .stat-value {
+        font-weight: 700;
+        color: var(--gazprom-accent);
+        font-size: 1.1rem;
+    }
+
+    .stat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .group-header {
+        margin: 40px 0 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid rgba(0, 153, 255, 0.3);
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .group-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin: 0;
+    }
+
+    .group-title i {
+        color: var(--gazprom-accent);
+        font-size: 1.5rem;
+    }
+
+    .group-count {
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-light));
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 0 5px 15px rgba(0, 82, 156, 0.3);
+    }
+
+    .employees-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(650px, 1fr));
+        gap: 30px;
+        margin: 20px 0;
+    }
+
+    @media (max-width: 1400px) {
+        .employees-grid {
+            grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .employees-grid {
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .employees-grid {
+            grid-template-columns: 1fr;
+            margin: 0 15px;
+        }
+    }
+
+    .glass-card {
+        background: rgba(0, 82, 156, 0.12);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 153, 255, 0.2);
+        border-radius: 25px;
+        box-shadow: var(--shadow-light),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: var(--shadow-heavy), var(--shadow-glow);
+        border-color: rgba(0, 153, 255, 0.4);
+    }
+
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-accent);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .glass-card:hover::before {
+        opacity: 1;
+    }
+
+    .card-content {
+        padding: 30px;
+        display: flex;
+        gap: 30px;
+        position: relative;
+        z-index: 1;
+        align-items: flex-start;
+    }
+
+    @media (max-width: 768px) {
+        .glass-card {
+            margin: 0;
+            width: 100%;
+        }
+
+        .card-content {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 25px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card-content {
+            padding: 20px;
+        }
+    }
+
+    .employee-photo-section {
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    .photo-wrapper {
+        width: 160px;
+        height: 160px;
+        position: relative;
+    }
+
+    .employee-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+        border: 4px solid white;
+        box-shadow: 0 15px 35px rgba(0, 82, 156, 0.3);
+        transition: all 0.5s ease;
+        position: relative;
+        z-index: 2;
+    }
+
+    .glass-card:hover .employee-photo {
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 20px 40px rgba(0, 82, 156, 0.4),
+                    0 0 30px rgba(0, 153, 255, 0.3);
+    }
+
+    .photo-glow {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: linear-gradient(135deg, var(--gazprom-accent), var(--gazprom-primary));
+        border-radius: 25px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        z-index: 1;
+    }
+
+    .glass-card:hover .photo-glow {
+        opacity: 0.4;
+    }
+
+    .no-photo {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0, 82, 156, 0.2), rgba(0, 120, 215, 0.1));
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 82, 156, 0.2);
+        transition: all 0.5s ease;
+    }
+
+    .no-photo i {
+        font-size: 3.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.5s ease;
+    }
+
+    .glass-card:hover .no-photo {
+        background: linear-gradient(135deg, rgba(0, 153, 255, 0.3), rgba(0, 82, 156, 0.2));
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .glass-card:hover .no-photo i {
+        transform: scale(1.1);
+        color: white;
+    }
+
+    .employee-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .employee-info {
+            width: 100%;
+        }
+    }
+
+    .employee-header {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .employee-name {
+        color: white;
+        font-weight: 800;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        line-height: 1.2;
+        text-shadow: 0 2px 8px rgba(0, 51, 102, 0.3);
+        word-wrap: break-word;
+        hyphens: auto;
+    }
+
+    @media (max-width: 480px) {
+        .employee-name {
+            font-size: 1.6rem;
+        }
+    }
+
+    .employee-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+        flex: 1;
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .employee-details {
+            grid-template-columns: 1fr;
+            width: 100%;
+        }
+    }
+
+    .detail-card {
+        background: rgba(0, 82, 156, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 153, 255, 0.15);
+        border-radius: 15px;
+        padding: 18px 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .detail-card:hover {
+        background: rgba(0, 153, 255, 0.15);
+        border-color: rgba(0, 153, 255, 0.3);
+        transform: translateY(-3px);
+    }
+
+    .detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--gradient-accent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .detail-card:hover::before {
+        opacity: 1;
+    }
+
+    .detail-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .detail-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 153, 255, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--gazprom-accent);
+        transition: all 0.3s ease;
+        margin-top: 4px;
+    }
+
+    .detail-card:hover .detail-icon {
+        background: rgba(0, 153, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    .detail-text {
+        flex: 1;
+    }
+
+    .detail-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: block;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 500;
+        line-height: 1.3;
+        text-shadow: 0 1px 3px rgba(0, 51, 102, 0.3);
+        word-wrap: break-word;
+        min-height: 1.3em;
+    }
+
+    @media (max-width: 480px) {
+        .detail-value {
+            font-size: 1rem;
+        }
+    }
+
+    .smus-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 25px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        color: white;
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        animation: pulse 3s infinite;
         margin-top: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .smus-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .smus-badge:hover::before {
+        left: 100%;
+    }
+
+    .smus-badge i {
+        font-size: 1rem;
+    }
+
+    .card-actions {
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    @media (max-width: 768px) {
+        .card-actions {
+            justify-content: center;
+        }
+    }
+
+    .gazprom-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-light));
+        border: 2px solid rgba(0, 153, 255, 0.3);
+        border-radius: 25px;
+        color: white;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 82, 156, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        min-width: 130px;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+        .gazprom-button {
+            width: 100%;
+            max-width: 250px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .gazprom-button {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+    }
+
+    .gazprom-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s;
+    }
+
+    .gazprom-button:hover {
+        background: linear-gradient(135deg, var(--gazprom-light), var(--gazprom-accent));
+        border-color: rgba(0, 153, 255, 0.6);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 82, 156, 0.4),
+                    0 0 30px rgba(0, 153, 255, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .gazprom-button:hover::before {
+        left: 100%;
+    }
+
+    .gazprom-button i {
+        font-size: 1.1rem;
+        transition: transform 0.4s ease;
+    }
+
+    .gazprom-button:hover i {
+        transform: translateX(5px);
+    }
+
+    .danger-button {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 25px rgba(220, 53, 69, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .danger-button:hover {
+        background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 20px 40px rgba(220, 53, 69, 0.4),
+                    0 0 30px rgba(220, 53, 69, 0.4);
+    }
+
+    .access-denied {
+        color: #ff6b6b;
+        font-size: 0.95rem;
+        padding: 15px 20px;
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: rgba(0, 82, 156, 0.1);
+        backdrop-filter: blur(20px);
+        border: 2px dashed rgba(0, 153, 255, 0.3);
+        border-radius: 30px;
+        margin: 40px 0;
+        animation: fadeIn 1s ease-out;
+    }
+
+    .empty-state i {
+        font-size: 5rem;
+        color: rgba(0, 153, 255, 0.5);
+        margin-bottom: 30px;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .empty-state h4 {
+        color: white;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 2rem;
+        text-shadow: 0 2px 10px rgba(0, 51, 102, 0.3);
+    }
+
+    .empty-state p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+        margin-bottom: 35px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    .auth-message {
+        background: rgba(0, 82, 156, 0.2);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 153, 255, 0.25);
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin: 30px 0;
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        animation: fadeIn 0.8s ease-out 0.6s both;
+    }
+
+    .auth-message i {
+        font-size: 2.5rem;
+        color: var(--gazprom-accent);
+        flex-shrink: 0;
+    }
+
+    .auth-message-content {
+        flex: 1;
+    }
+
+    .auth-message h5 {
+        color: white;
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-size: 1.3rem;
+    }
+
+    .auth-message p {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 0;
+        font-size: 1.1rem;
+    }
+
+    .auth-message a {
+        color: var(--gazprom-accent);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .auth-message a:hover {
+        color: white;
+        text-shadow: 0 0 10px rgba(0, 153, 255, 0.5);
+    }
+
+    @media (max-width: 1200px) {
+        .employees-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-content {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .employee-details {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .employees-hero h1 {
+            font-size: 2.8rem;
+        }
+
+        .employees-hero p {
+            font-size: 1.2rem;
+        }
+
+        .header-section {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .header-controls {
+            flex-direction: column;
+        }
+
+        .filters-panel {
+            padding: 20px;
+        }
+
+        .filter-controls {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .filter-group {
+            min-width: 100%;
+        }
+
+        .filter-actions {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .employees-hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .employees-hero p {
+            font-size: 1.1rem;
+            padding: 0 20px;
+        }
+
+        .employee-details {
+            grid-template-columns: 1fr;
+        }
+
+        .photo-wrapper {
+            width: 140px;
+            height: 140px;
+        }
+
+        .employee-name {
+            font-size: 1.6rem;
+        }
+
+        .card-actions {
+            justify-content: center;
+        }
+
+        .group-title {
+            font-size: 1.5rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .group-count {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+        }
+
+        .filter-stats {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .stat-item {
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .employees-hero {
+            padding: 70px 0 40px;
+        }
+
+        .glass-card {
+            margin: 0 10px;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .photo-wrapper {
+            width: 120px;
+            height: 120px;
+        }
+
+        .empty-state {
+            padding: 50px 20px;
+            margin: 20px 10px;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+        }
+
+        .empty-state h4 {
+            font-size: 1.6rem;
+        }
+
+        .filters-panel {
+            margin: 20px 10px;
+            padding: 15px;
+        }
+
+        .filter-button {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
     }
 </style>
 
-<div class="employees-hero">
-    <div class="container">
-        <h1><i class="fas fa-users me-3"></i>Молодые специалисты</h1>
-        <p>Профессиональный состав компании</p>
-    </div>
-</div>
-
-<div class="container">
-    <div class="header-section">
-        <h2>Сотрудники</h2>
-        <div>
-            <span class="count-badge">Всего: {{ employees|length }}</span>
-            {% if user.is_authenticated and user.is_staff %}
-                <a href="{% url 'employee_create' %}" class="btn-gazprom ms-3">
-                    <i class="fas fa-plus me-2"></i>Добавить сотрудника
-                </a>
-            {% endif %}
-        </div>
+<div class="main-container">
+    <!-- Анимированный фон -->
+    <div class="animated-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
     </div>
 
-    {% if not user.is_authenticated %}
-        <div class="alert alert-info text-center mb-4">
-            <i class="fas fa-sign-in-alt me-2"></i>Для управления сотрудниками <a href="{% url 'login' %}">войдите в систему</a>.
-        </div>
-    {% endif %}
+    <!-- Основной контент -->
+    <div class="glass-content">
+        <div class="container">
+            <!-- Герой секция -->
+            <div class="employees-hero">
+                <h1><i class="fas fa-users me-3"></i>Молодые специалисты</h1>
+                <p>Профессиональный состав компании</p>
+            </div>
 
-    <div class="row">
-        {% for employee in employees %}
-        <div class="col-lg-6 mb-4">
-            <div class="card gazprom-card h-100">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4">
-                            {% if employee.photo %}
-                                <img src="{{ employee.photo.url }}" class="employee-photo" alt="Фото {{ employee.user.get_full_name }}">
-                            {% else %}
-                                <div class="no-photo">
-                                    <i class="fas fa-user fa-2x text-muted"></i>
-                                </div>
-                            {% endif %}
+            <!-- Заголовок с управлением -->
+            <div class="header-section">
+                <div class="header-title">
+                    <i class="fas fa-user-tie"></i>
+                    <h2>Команда специалистов</h2>
+                </div>
+                <div class="header-controls">
+                    <div class="count-badge">
+                        <i class="fas fa-users"></i>
+                        <span>Всего: {{ employees|length }}</span>
+                    </div>
+                    {% if user.is_authenticated and user.is_staff %}
+                        <a href="{% url 'employee_create' %}" class="gazprom-button">
+                            <i class="fas fa-plus me-1"></i>Добавить сотрудника
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Панель фильтров и сортировки -->
+            <div class="filters-panel">
+                <form method="GET" action="{% url 'sotrudniki' %}" id="filters-form">
+                    <div class="filters-header">
+                        <h4><i class="fas fa-filter"></i> Фильтры и сортировка</h4>
+                        <div class="filter-actions">
+                            <button type="submit" class="filter-button">
+                                <i class="fas fa-search"></i> Применить
+                            </button>
+                            <a href="{% url 'sotrudniki' %}" class="filter-button reset">
+                                <i class="fas fa-redo"></i> Сбросить
+                            </a>
                         </div>
-                        <div class="col-8">
-                            <h5 class="card-title">{{ employee.user.get_full_name }}</h5>
-                            <div class="employee-info">
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-briefcase me-1"></i>Должность:</strong><br>
-                                    {{ employee.position.name }}
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-building me-1"></i>Филиал:</strong><br>
-                                    {{ employee.filial.name }}
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-phone me-1"></i>Телефон:</strong><br>
-                                    {{ employee.internal_phone }}
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-birthday-cake me-1"></i>Дата рождения:</strong><br>
-                                    {{ employee.birth_date }}
-                                </p>
-                            </div>
-                            {% if employee.is_smus %}
-                                <span class="smus-badge">
-                                    <i class="fas fa-star me-1"></i>Член СМУС
-                                </span>
+                    </div>
+
+                    <div class="filter-controls">
+                        <!-- Фильтр по филиалу -->
+                        <div class="filter-group">
+                            <label class="filter-label">Филиал</label>
+                            <select name="filial" class="filter-select">
+                                <option value="">Все филиалы</option>
+                                {% for filial in filials %}
+                                    <option value="{{ filial.id }}" {% if selected_filial == filial.id|stringformat:"i" %}selected{% endif %}>
+                                        {{ filial.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Фильтр по должности -->
+                        <div class="filter-group">
+                            <label class="filter-label">Должность</label>
+                            <select name="position" class="filter-select">
+                                <option value="">Все должности</option>
+                                {% for position in positions %}
+                                    <option value="{{ position.id }}" {% if selected_position == position.id|stringformat:"i" %}selected{% endif %}>
+                                        {{ position.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Сортировка -->
+                        <div class="filter-group">
+                            <label class="filter-label">Сортировка</label>
+                            <select name="sort" class="filter-select">
+                                <option value="">По умолчанию (фамилия)</option>
+                                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>По фамилии (А-Я)</option>
+                                <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>По фамилии (Я-А)</option>
+                                <option value="birth_date" {% if sort_by == 'birth_date' %}selected{% endif %}>По возрасту (младшие)</option>
+                                <option value="-birth_date" {% if sort_by == '-birth_date' %}selected{% endif %}>По возрасту (старшие)</option>
+                                <option value="position" {% if sort_by == 'position' %}selected{% endif %}>По должности</option>
+                                <option value="filial" {% if sort_by == 'filial' %}selected{% endif %}>По филиалу</option>
+                            </select>
+                        </div>
+
+                        <!-- Фильтр по статусу СМУС -->
+                        <div class="filter-group">
+                            <label class="filter-label">Статус СМУС</label>
+                            <select name="smus" class="filter-select">
+                                <option value="">Все сотрудники</option>
+                                <option value="true" {% if selected_smus == 'true' %}selected{% endif %}>Только члены СМУС</option>
+                                <option value="false" {% if selected_smus == 'false' %}selected{% endif %}>Не члены СМУС</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Группировка -->
+                    <div class="filter-controls" style="margin-top: 20px;">
+                        <div class="filter-group">
+                            <label class="filter-label">Группировка</label>
+                            <select name="group" class="filter-select" id="group-select">
+                                <option value="">Без группировки</option>
+                                <option value="filial" {% if group_by == 'filial' %}selected{% endif %}>По филиалу</option>
+                                <option value="position" {% if group_by == 'position' %}selected{% endif %}>По должности</option>
+                                <option value="smus" {% if group_by == 'smus' %}selected{% endif %}>По статусу СМУС</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Статистика фильтров -->
+                    <div class="filter-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Найдено сотрудников:</span>
+                            <span class="stat-value">{{ employees.count }}</span>
+                        </div>
+                        {% if selected_filial %}
+                        <div class="stat-item">
+                            <span class="stat-label">Филиал:</span>
+                            <span class="stat-value">{{ selected_filial_name }}</span>
+                        </div>
+                        {% endif %}
+                        {% if selected_position %}
+                        <div class="stat-item">
+                            <span class="stat-label">Должность:</span>
+                            <span class="stat-value">{{ selected_position_name }}</span>
+                        </div>
+                        {% endif %}
+                        {% if selected_smus %}
+                        <div class="stat-item">
+                            <span class="stat-label">Статус СМУС:</span>
+                            <span class="stat-value">{{ selected_smus|yesno:"Члены СМУС,Не члены СМУС" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Сообщение об авторизации -->
+            {% if not user.is_authenticated %}
+                <div class="auth-message">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <div class="auth-message-content">
+                        <h5>Требуется авторизация</h5>
+                        <p>Для управления сотрудниками <a href="{% url 'login' %}">войдите в систему</a> с правами администратора.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Список сотрудников с группировкой -->
+            {% if group_by %}
+                <!-- Сгруппированный список -->
+                {% for group_name, group_employees in grouped_employees.items %}
+                <div class="group-header">
+                    <h3 class="group-title">
+                        <i class="fas fa-folder"></i>
+                        {% if group_by == 'filial' %}
+                            Филиал: {{ group_name|default:"Не указан" }}
+                        {% elif group_by == 'position' %}
+                            Должность: {{ group_name|default:"Не указана" }}
+                        {% elif group_by == 'smus' %}
+                            {% if group_name == "Члены СМУС" %}
+                                <i class="fas fa-star"></i> Члены СМУС
+                            {% else %}
+                                {{ group_name }}
                             {% endif %}
-                            <div class="card-actions">
-                                {% if user.is_authenticated %}
-                                    <a href="{% url 'employee_detail' employee.pk %}" class="btn-gazprom btn-sm">
-                                        <i class="fas fa-eye me-1"></i>Просмотр
-                                    </a>
-                                    {% if user.is_staff %}
-                                        <a href="{% url 'employee_update' employee.pk %}" class="btn-gazprom btn-sm">
-                                            <i class="fas fa-edit me-1"></i>Редактировать
-                                        </a>
-                                        <a href="{% url 'employee_delete' employee.pk %}" class="btn-danger-custom btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этого сотрудника?');">
-                                            <i class="fas fa-trash me-1"></i>Удалить
-                                        </a>
+                        {% endif %}
+                        <span class="group-count">{{ group_employees|length }}</span>
+                    </h3>
+                </div>
+
+                <div class="employees-grid">
+                    {% for employee in group_employees %}
+                    <div class="glass-card" style="animation-delay: {{ forloop.counter|add:"0.3" }}s">
+                        <div class="card-content">
+                            <!-- Фото сотрудника -->
+                            <div class="employee-photo-section">
+                                <div class="photo-wrapper">
+                                    {% if employee.photo %}
+                                        <img src="{{ employee.photo.url }}" class="employee-photo" alt="Фото {{ employee.user.get_full_name }}">
+                                    {% else %}
+                                        <div class="no-photo">
+                                            <i class="fas fa-user"></i>
+                                        </div>
                                     {% endif %}
-                                {% else %}
-                                    <span class="access-denied">Требуется авторизация для действий</span>
-                                {% endif %}
+                                    <div class="photo-glow"></div>
+                                </div>
+                            </div>
+
+                            <!-- Информация о сотруднике -->
+                            <div class="employee-info">
+                                <div class="employee-header">
+                                    <h3 class="employee-name">
+                                        {{ employee.user.last_name }} {{ employee.user.first_name }}
+                                        {% if employee.user.patronymic %}
+                                            {{ employee.user.patronymic }}
+                                        {% endif %}
+                                    </h3>
+                                    {% if employee.is_smus %}
+                                        <span class="smus-badge">
+                                            <i class="fas fa-star"></i>Член СМУС
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Детали сотрудника -->
+                                <div class="employee-details">
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Должность</span>
+                                                <span class="detail-value">{{ employee.position.name|default:"Не указано"|truncatechars:40 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-building"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Филиал</span>
+                                                <span class="detail-value">{{ employee.filial.name|default:"Не указано"|truncatechars:40 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Телефон</span>
+                                                <span class="detail-value">{{ employee.internal_phone|default:"Не указано" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-birthday-cake"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Дата рождения</span>
+                                                <span class="detail-value">{{ employee.birth_date|date:"d.m.Y"|default:"Не указано" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Действия -->
+                                <div class="card-actions">
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'employee_detail' employee.pk %}" class="gazprom-button">
+                                            <i class="fas fa-eye"></i>Просмотр
+                                        </a>
+                                        {% if user.is_staff %}
+                                            <a href="{% url 'employee_update' employee.pk %}" class="gazprom-button">
+                                                <i class="fas fa-edit"></i>Редактировать
+                                            </a>
+                                            <a href="{% url 'employee_delete' employee.pk %}" class="gazprom-button danger-button"
+                                               onclick="return confirm('Вы уверены, что хотите удалить этого сотрудника?');">
+                                                <i class="fas fa-trash"></i>Удалить
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="access-denied">
+                                            <i class="fas fa-lock"></i>
+                                            <span>Требуется авторизация для действий</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-            </div>
+                {% empty %}
+                <!-- Empty state для групп -->
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h4>Сотрудники не найдены</h4>
+                    <p>Нет сотрудников, соответствующих выбранным фильтрам.</p>
+                    {% if user.is_staff %}
+                        <a href="{% url 'employee_create' %}" class="gazprom-button" style="min-width: 250px;">
+                            <i class="fas fa-plus me-2"></i>Добавить сотрудника
+                        </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Обычный список без группировки -->
+                <div class="employees-grid">
+                    {% for employee in employees %}
+                    <div class="glass-card" style="animation-delay: {{ forloop.counter|add:"0.3" }}s">
+                        <div class="card-content">
+                            <!-- Фото сотрудника -->
+                            <div class="employee-photo-section">
+                                <div class="photo-wrapper">
+                                    {% if employee.photo %}
+                                        <img src="{{ employee.photo.url }}" class="employee-photo" alt="Фото {{ employee.user.get_full_name }}">
+                                    {% else %}
+                                        <div class="no-photo">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="photo-glow"></div>
+                                </div>
+                            </div>
+
+                            <!-- Информация о сотруднике -->
+                            <div class="employee-info">
+                                <div class="employee-header">
+                                    <h3 class="employee-name">
+                                        {{ employee.user.last_name }} {{ employee.user.first_name }}
+                                        {% if employee.user.patronymic %}
+                                            {{ employee.user.patronymic }}
+                                        {% endif %}
+                                    </h3>
+                                    {% if employee.is_smus %}
+                                        <span class="smus-badge">
+                                            <i class="fas fa-star"></i>Член СМУС
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Детали сотрудника -->
+                                <div class="employee-details">
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Должность</span>
+                                                <span class="detail-value">{{ employee.position.name|default:"Не указано"|truncatechars:40 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-building"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Филиал</span>
+                                                <span class="detail-value">{{ employee.filial.name|default:"Не указано"|truncatechars:40 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Телефон</span>
+                                                <span class="detail-value">{{ employee.internal_phone|default:"Не указано" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-card">
+                                        <div class="detail-content">
+                                            <div class="detail-icon">
+                                                <i class="fas fa-birthday-cake"></i>
+                                            </div>
+                                            <div class="detail-text">
+                                                <span class="detail-label">Дата рождения</span>
+                                                <span class="detail-value">{{ employee.birth_date|date:"d.m.Y"|default:"Не указано" }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Действия -->
+                                <div class="card-actions">
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'employee_detail' employee.pk %}" class="gazprom-button">
+                                            <i class="fas fa-eye"></i>Просмотр
+                                        </a>
+                                        {% if user.is_staff %}
+                                            <a href="{% url 'employee_update' employee.pk %}" class="gazprom-button">
+                                                <i class="fas fa-edit"></i>Редактировать
+                                            </a>
+                                            <a href="{% url 'employee_delete' employee.pk %}" class="gazprom-button danger-button"
+                                               onclick="return confirm('Вы уверены, что хотите удалить этого сотрудника?');">
+                                                <i class="fas fa-trash"></i>Удалить
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="access-denied">
+                                            <i class="fas fa-lock"></i>
+                                            <span>Требуется авторизация для действий</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <!-- Empty state -->
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h4>Сотрудники не найдены</h4>
+                        <p>В системе пока нет данных о молодых специалистах компании.</p>
+                        {% if user.is_staff %}
+                            <a href="{% url 'employee_create' %}" class="gazprom-button" style="min-width: 250px;">
+                                <i class="fas fa-plus me-2"></i>Добавить первого сотрудника
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <div class="text-muted">
-                <i class="fas fa-users fa-3x mb-3"></i>
-                <h4>Сотрудники не найдены</h4>
-                <p>Нет данных о молодых специалистах</p>
-                {% if user.is_staff %}
-                    <a href="{% url 'employee_create' %}" class="btn-gazprom mt-3">
-                        <i class="fas fa-plus me-2"></i>Добавить первого сотрудника
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
     </div>
 </div>
 
+<!-- JavaScript для анимаций и фильтров -->
 <script>
-    // Дополнительный JS для подтверждения удаления (можно расширить с модальными окнами Bootstrap)
     document.addEventListener('DOMContentLoaded', function() {
-        // Если нужно, добавьте обработчики для AJAX-действий
+        // Анимация карточек при скролле
+        const cards = document.querySelectorAll('.glass-card');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.style.animationDelay || '0.3s';
+                    entry.target.style.animation = `fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) ${delay} forwards`;
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px) scale(0.95)';
+            observer.observe(card);
+        });
+
+        // Авто-применение фильтров при изменении группировки
+        const groupSelect = document.getElementById('group-select');
+        const filtersForm = document.getElementById('filters-form');
+
+        if (groupSelect) {
+            groupSelect.addEventListener('change', function() {
+                // Если выбрана группировка, автоматически применяем фильтры
+                if (this.value) {
+                    filtersForm.submit();
+                }
+            });
+        }
+
+        // Эффект при наведении на карточки
+        cards.forEach(card => {
+            const photo = card.querySelector('.employee-photo, .no-photo');
+            const glow = card.querySelector('.photo-glow');
+            const detailCards = card.querySelectorAll('.detail-card');
+
+            card.addEventListener('mouseenter', () => {
+                if (glow) glow.style.opacity = '0.4';
+                detailCards.forEach(detail => {
+                    detail.style.transform = 'translateY(-2px)';
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (glow) glow.style.opacity = '0';
+                detailCards.forEach(detail => {
+                    detail.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // Эффект волн для кнопок
+        const buttons = document.querySelectorAll('.gazprom-button, .filter-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.type === 'submit' || this.tagName === 'BUTTON' || this.tagName === 'A') {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const wave = document.createElement('span');
+                    wave.style.cssText = `
+                        position: absolute;
+                        width: 2px;
+                        height: 2px;
+                        background: rgba(255, 255, 255, 0.4);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        transform: translate(-50%, -50%);
+                        animation: buttonWave 0.6s linear forwards;
+                    `;
+
+                    wave.style.left = `${x}px`;
+                    wave.style.top = `${y}px`;
+
+                    // Добавляем keyframes если их нет
+                    if (!document.querySelector('#buttonWaveKeyframes')) {
+                        const style = document.createElement('style');
+                        style.id = 'buttonWaveKeyframes';
+                        style.textContent = `
+                            @keyframes buttonWave {
+                                0% {
+                                    width: 2px;
+                                    height: 2px;
+                                    opacity: 1;
+                                }
+                                100% {
+                                    width: 200px;
+                                    height: 200px;
+                                    opacity: 0;
+                                }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+
+                    this.appendChild(wave);
+                    setTimeout(() => wave.remove(), 600);
+                }
+            });
+        });
+
+        // Параллакс эффект для блобов
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+
+            const blob1 = document.querySelector('.blob-1');
+            const blob2 = document.querySelector('.blob-2');
+
+            if (blob1) blob1.style.transform = `translate(${x * 1.5}px, ${y * 1.5}px)`;
+            if (blob2) blob2.style.transform = `translate(${-x}px, ${-y}px)`;
+        });
+
+        // Стилизация статуса СМУС
+        const smusBadges = document.querySelectorAll('.smus-badge');
+        smusBadges.forEach(badge => {
+            badge.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+
+            badge.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Сохранение параметров фильтров в localStorage
+        function saveFilters() {
+            const formData = new FormData(filtersForm);
+            const filters = {};
+
+            formData.forEach((value, key) => {
+                if (value) filters[key] = value;
+            });
+
+            localStorage.setItem('employee_filters', JSON.stringify(filters));
+        }
+
+        // Восстановление фильтров из localStorage
+        function restoreFilters() {
+            const savedFilters = localStorage.getItem('employee_filters');
+            if (savedFilters) {
+                const filters = JSON.parse(savedFilters);
+                Object.keys(filters).forEach(key => {
+                    const element = filtersForm.querySelector(`[name="${key}"]`);
+                    if (element) {
+                        element.value = filters[key];
+                    }
+                });
+            }
+        }
+
+        // Восстанавливаем фильтры при загрузке
+        restoreFilters();
+
+        // Сохраняем фильтры при изменении
+        filtersForm.addEventListener('change', saveFilters);
+        filtersForm.addEventListener('submit', saveFilters);
     });
 </script>
+
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}

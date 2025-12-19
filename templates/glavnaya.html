@@ -2,135 +2,960 @@
 
 {% block content %}
 <style>
-    .hero-section {
-        background: linear-gradient(rgba(0, 82, 156, 0.8), rgba(0, 82, 156, 0.9)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        color: white;
-        padding: 100px 0;
-        text-align: center;
-        margin: -20px -20px 50px -20px;
+    /* Глобальные переменные в синей гамме Газпром */
+    :root {
+        --gazprom-dark: #003366;
+        --gazprom-primary: #00529c;
+        --gazprom-light: #0078d7;
+        --gazprom-accent: #0099ff;
+        --gazprom-cyan: #00bfff;
+        --gradient-primary: linear-gradient(135deg, #003366 0%, #00529c 50%, #0078d7 100%);
+        --gradient-secondary: linear-gradient(135deg, #00529c 0%, #0078d7 50%, #0099ff 100%);
+        --gradient-accent: linear-gradient(135deg, #0078d7 0%, #0099ff 50%, #00bfff 100%);
+        --gradient-dark: linear-gradient(135deg, #002244 0%, #003366 100%);
+        --gradient-card: linear-gradient(145deg, rgba(0, 82, 156, 0.15), rgba(0, 120, 215, 0.08));
+        --shadow-sm: 0 4px 6px -1px rgba(0, 51, 102, 0.1), 0 2px 4px -1px rgba(0, 51, 102, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 51, 102, 0.1), 0 4px 6px -2px rgba(0, 51, 102, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 51, 102, 0.1), 0 10px 10px -5px rgba(0, 51, 102, 0.04);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 51, 102, 0.25);
+        --shadow-glow: 0 0 30px rgba(0, 153, 255, 0.3);
+        --glass-bg: rgba(0, 82, 156, 0.08);
+        --glass-border: rgba(0, 153, 255, 0.1);
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.85);
     }
 
-    .hero-section h1 {
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    /* Анимации */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
     }
 
-    .hero-section p {
-        font-size: 1.5rem;
-        margin-bottom: 30px;
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        33% {
+            transform: translateY(-15px) rotate(120deg);
+        }
+        66% {
+            transform: translateY(5px) rotate(240deg);
+        }
     }
 
-    .stats-section {
-        margin-top: -30px;
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+    }
+
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes blob {
+        0% {
+            transform: translate(0px, 0px) scale(1);
+        }
+        33% {
+            transform: translate(40px, -60px) scale(1.1);
+        }
+        66% {
+            transform: translate(-30px, 30px) scale(0.9);
+        }
+        100% {
+            transform: translate(0px, 0px) scale(1);
+        }
+    }
+
+    @keyframes wave {
+        0% {
+            transform: translateX(0) translateY(0);
+        }
+        50% {
+            transform: translateX(-25%) translateY(-10px);
+        }
+        100% {
+            transform: translateX(0) translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .animate-float {
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .animate-shimmer {
+        animation: shimmer 3s infinite linear;
+        background-size: 1000px 100%;
+    }
+
+    .animate-pulse {
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    .animate-gradient {
+        animation: gradientShift 5s ease infinite;
+        background-size: 200% 200%;
+    }
+
+    .animate-wave {
+        animation: wave 20s ease-in-out infinite;
+    }
+
+    /* Главный контейнер */
+    .main-container {
+        min-height: 100vh;
+        background: var(--gradient-primary);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Анимированный фон с волнами */
+    .animated-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.4;
+    }
+
+    .blob-1 {
+        width: 600px;
+        height: 600px;
+        background: var(--gradient-accent);
+        top: -300px;
+        right: -150px;
+        animation: blob 25s infinite linear;
+    }
+
+    .blob-2 {
+        width: 500px;
+        height: 500px;
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-accent));
+        bottom: -200px;
+        left: -150px;
+        animation: blob 30s infinite linear reverse;
+    }
+
+    .blob-3 {
+        width: 400px;
+        height: 400px;
+        background: linear-gradient(135deg, var(--gazprom-dark), var(--gazprom-light));
+        top: 40%;
+        left: 60%;
+        animation: blob 35s infinite linear;
+    }
+
+    /* Волновой паттерн */
+    .wave-pattern {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background-image:
+            radial-gradient(circle at 25% 25%, rgba(0, 153, 255, 0.1) 2px, transparent 2px),
+            radial-gradient(circle at 75% 75%, rgba(0, 153, 255, 0.1) 2px, transparent 2px);
+        background-size: 100px 100px;
+        animation: wave 30s linear infinite;
+        opacity: 0.3;
+    }
+
+    /* Стеклянный морфизм контента */
+    .glass-content {
         position: relative;
         z-index: 2;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 40px 0;
     }
 
-    .gazprom-card {
-        background: white;
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 82, 156, 0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .glass-card {
+        background: rgba(0, 82, 156, 0.15);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 153, 255, 0.15);
+        border-radius: 40px;
+        box-shadow:
+            var(--shadow-lg),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 0 0 1px rgba(0, 153, 255, 0.05);
+        padding: 80px 50px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 1200px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0, 153, 255, 0.5), transparent);
+    }
+
+    .glass-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0, 153, 255, 0.3), transparent);
+    }
+
+    /* Заголовок */
+    .hero-title {
+        font-size: 4.5rem;
+        font-weight: 900;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 30%, rgba(179, 220, 255, 0.8) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+        line-height: 1.1;
+        position: relative;
+        padding-bottom: 40px;
+        text-shadow: 0 2px 10px rgba(0, 82, 156, 0.3);
+        letter-spacing: -0.5px;
+    }
+
+    .hero-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 4px;
+        background: var(--gradient-accent);
+        border-radius: 2px;
+        box-shadow: 0 0 20px rgba(0, 153, 255, 0.5);
+    }
+
+    .hero-subtitle {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1.6rem;
+        text-align: center;
+        margin-bottom: 80px;
+        font-weight: 300;
+        letter-spacing: 0.8px;
+        line-height: 1.6;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Статистические карточки */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 40px;
+        margin: 80px 0;
+    }
+
+    .stat-card {
+        background: var(--gradient-card);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 153, 255, 0.2);
+        border-radius: 30px;
+        padding: 50px 40px;
+        text-align: center;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(0, 153, 255, 0.05), transparent);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: var(--shadow-xl), var(--shadow-glow);
+        border-color: rgba(0, 153, 255, 0.4);
+    }
+
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+
+    .stat-icon-wrapper {
+        width: 130px;
+        height: 130px;
+        margin: 0 auto 40px;
+        position: relative;
+    }
+
+    .stat-icon {
+        width: 100%;
         height: 100%;
-    }
-
-    .gazprom-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 82, 156, 0.3);
-    }
-
-    .gazprom-card .card-body {
-        padding: 30px 20px;
-    }
-
-    .gazprom-card h3 {
-        color: #00529c;
+        background: linear-gradient(135deg, rgba(0, 153, 255, 0.2), rgba(0, 82, 156, 0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
         font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .gazprom-card p {
-        color: #666;
-        font-size: 1.1rem;
-        margin-bottom: 20px;
-    }
-
-    .btn-gazprom {
-        background: linear-gradient(45deg, #00529c, #0078d7);
-        border: none;
-        border-radius: 25px;
-        padding: 10px 25px;
         color: white;
-        font-weight: bold;
+        transition: all 0.5s ease;
+        border: 2px solid rgba(0, 153, 255, 0.3);
+    }
+
+    .stat-icon::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        background: linear-gradient(135deg, var(--gazprom-accent), var(--gazprom-primary));
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .stat-card:hover .stat-icon {
+        transform: rotateY(180deg) scale(1.1);
+        background: linear-gradient(135deg, rgba(0, 153, 255, 0.3), rgba(0, 82, 156, 0.2));
+    }
+
+    .stat-card:hover .stat-icon::before {
+        opacity: 1;
+    }
+
+    .stat-number {
+        font-size: 5rem;
+        font-weight: 900;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(179, 220, 255, 0.9) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        position: relative;
+        display: inline-block;
+        text-shadow: 0 2px 10px rgba(0, 82, 156, 0.3);
+    }
+
+    .stat-number::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-accent);
+        border-radius: 2px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        box-shadow: 0 0 15px rgba(0, 153, 255, 0.5);
+    }
+
+    .stat-card:hover .stat-number::after {
+        opacity: 1;
+    }
+
+    .stat-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.4rem;
+        margin-bottom: 40px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        line-height: 1.4;
+    }
+
+    .stat-actions {
+        margin-top: 30px;
+    }
+
+    /* Акцентная кнопка в стиле Газпром */
+    .gazprom-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding: 18px 45px;
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-light));
+        border: 2px solid rgba(0, 153, 255, 0.3);
+        border-radius: 50px;
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+        box-shadow:
+            0 10px 30px rgba(0, 82, 156, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .gazprom-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s;
+    }
+
+    .gazprom-button:hover {
+        background: linear-gradient(135deg, var(--gazprom-light), var(--gazprom-accent));
+        border-color: rgba(0, 153, 255, 0.6);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow:
+            0 20px 40px rgba(0, 82, 156, 0.4),
+            0 0 30px rgba(0, 153, 255, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .gazprom-button:hover::before {
+        left: 100%;
+    }
+
+    .gazprom-button i {
+        font-size: 1.3rem;
+        transition: transform 0.4s ease;
+    }
+
+    .gazprom-button:hover i {
+        transform: translateX(8px) rotate(10deg);
+    }
+
+    /* Статусные бейджи */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 25px;
+        background: rgba(0, 153, 255, 0.15);
+        border: 1px solid rgba(0, 153, 255, 0.25);
+        border-radius: 25px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-top: 20px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .status-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .status-badge:hover {
+        background: rgba(0, 153, 255, 0.25);
+        border-color: rgba(0, 153, 255, 0.4);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 153, 255, 0.2);
+    }
+
+    .status-badge:hover::before {
+        left: 100%;
+    }
+
+    /* Футерная информация */
+    .info-footer {
+        text-align: center;
+        margin-top: 80px;
+        padding-top: 50px;
+        border-top: 1px solid rgba(0, 153, 255, 0.2);
+    }
+
+    .info-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 15px;
+        padding: 18px 35px;
+        background: rgba(0, 82, 156, 0.2);
+        border: 1px solid rgba(0, 153, 255, 0.2);
+        border-radius: 25px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        backdrop-filter: blur(10px);
+        animation: pulse 4s ease-in-out infinite;
         transition: all 0.3s ease;
     }
 
-    .btn-gazprom:hover {
-        background: linear-gradient(45deg, #0078d7, #00529c);
-        transform: scale(1.05);
-        color: white;
+    .info-text:hover {
+        background: rgba(0, 82, 156, 0.3);
+        border-color: rgba(0, 153, 255, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 82, 156, 0.2);
     }
 
-    .welcome-text {
-        text-align: center;
-        margin-bottom: 50px;
+    /* Декоративные элементы */
+    .floating-elements {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
     }
 
-    .welcome-text h2 {
-        color: #00529c;
-        font-weight: bold;
-        margin-bottom: 20px;
+    .floating-element {
+        position: absolute;
+        opacity: 0.15;
+        animation: float 12s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(0, 153, 255, 0.3));
+    }
+
+    .element-1 { top: 15%; left: 10%; font-size: 3rem; animation-delay: 0s; color: #00bfff; }
+    .element-2 { top: 25%; right: 15%; font-size: 4rem; animation-delay: 3s; color: #0099ff; }
+    .element-3 { bottom: 35%; left: 20%; font-size: 3.5rem; animation-delay: 6s; color: #0078d7; }
+    .element-4 { bottom: 25%; right: 10%; font-size: 3rem; animation-delay: 9s; color: #00529c; }
+
+    /* Адаптивность */
+    @media (max-width: 1200px) {
+        .hero-title {
+            font-size: 3.8rem;
+        }
+
+        .glass-card {
+            padding: 60px 40px;
+            margin: 30px;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 3.2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+        }
+
+        .stats-container {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .stat-card {
+            padding: 40px 30px;
+        }
+
+        .stat-icon-wrapper {
+            width: 110px;
+            height: 110px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+            padding-bottom: 30px;
+        }
+
+        .hero-title::after {
+            width: 200px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+        }
+
+        .glass-card {
+            padding: 40px 25px;
+            margin: 20px;
+            border-radius: 30px;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+        }
+
+        .gazprom-button {
+            padding: 16px 35px;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            padding: 0 15px;
+        }
+
+        .stat-card {
+            padding: 35px 25px;
+        }
+
+        .stat-icon-wrapper {
+            width: 90px;
+            height: 90px;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+        }
+
+        .gazprom-button {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .info-text {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+            padding: 15px 20px;
+        }
     }
 </style>
 
-<div class="hero-section">
-    <div class="container">
-        <h1>Добро пожаловать в систему учета молодых специалистов!</h1>
-        <p>ООО "Газпром добыча Уренгой"</p>
-    </div>
-</div>
+<div class="main-container">
+    <!-- Анимированный фон в синей гамме Газпрома -->
+    <div class="animated-background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="wave-pattern"></div>
 
-<div class="container">
-    <div class="welcome-text">
-        <h2>Корпоративная система управления</h2>
-        <p class="lead">Эффективное решение для учета и развития молодых специалистов компании</p>
-    </div>
-
-    <div class="row justify-content-center stats-section">
-        <div class="col-md-4 mb-4">
-            <div class="card gazprom-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x mb-3" style="color: #00529c;"></i>
-                    <h3>{{ employees_count }}</h3>
-                    <p>Сотрудников в системе</p>
-                    <a href="{% url 'sotrudniki' %}" class="btn btn-gazprom">
-                        <i class="fas fa-arrow-right me-2"></i>Перейти
-                    </a>
-                </div>
+        <!-- Декоративные элементы в синих тонах -->
+        <div class="floating-elements">
+            <div class="floating-element element-1">
+                <i class="fas fa-users"></i>
             </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card gazprom-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-alt fa-3x mb-3" style="color: #00529c;"></i>
-                    <h3>{{ events_count }}</h3>
-                    <p>Мероприятий запланировано</p>
-                    <a href="{% url 'meropriyatiya' %}" class="btn btn-gazprom">
-                        <i class="fas fa-arrow-right me-2"></i>Перейти
-                    </a>
-                </div>
+            <div class="floating-element element-2">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="floating-element element-3">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="floating-element element-4">
+                <i class="fas fa-star"></i>
             </div>
         </div>
     </div>
+
+    <!-- Основной контент -->
+    <div class="glass-content">
+        <div class="container">
+            <div class="glass-card animate-fade-in">
+                <!-- Заголовок в стиле Газпром -->
+                <h1 class="hero-title animate-fade-in">
+                    Платформа молодых<br>специалистов Газпром
+                </h1>
+
+                <p class="hero-subtitle animate-fade-in" style="animation-delay: 0.2s;">
+                    Инновационная цифровая экосистема для развития и поддержки<br>талантов ООО "Газпром добыча Уренгой"
+                </p>
+
+                <!-- Статистика -->
+                <div class="stats-container">
+                    <!-- Карточка сотрудников -->
+                    <div class="stat-card animate-fade-in" style="animation-delay: 0.4s;">
+                        <div class="stat-icon-wrapper">
+                            <div class="stat-icon animate-float">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-number animate-pulse">
+                            {{ employees_count }}
+                        </div>
+
+                        <div class="stat-label">
+                            Профессионалов<br>в корпоративной системе
+                        </div>
+
+                        <div class="stat-actions">
+                            <a href="{% url 'sotrudniki' %}" class="gazprom-button">
+                                <span>Смотреть команду</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+
+                            <div class="status-badge animate-pulse" style="animation-delay: 1s;">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Актуальная статистика</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Карточка мероприятий -->
+                    <div class="stat-card animate-fade-in" style="animation-delay: 0.6s;">
+                        <div class="stat-icon-wrapper">
+                            <div class="stat-icon animate-float" style="animation-delay: 0.5s;">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+
+                        <div class="stat-number animate-pulse" style="animation-delay: 0.5s;">
+                            {{ events_count }}
+                        </div>
+
+                        <div class="stat-label">
+                            Корпоративных мероприятий<br>в текущем сезоне
+                        </div>
+
+                        <div class="stat-actions">
+                            <a href="{% url 'meropriyatiya' %}" class="gazprom-button">
+                                <span>Календарь событий</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+
+                            <div class="status-badge animate-pulse" style="animation-delay: 1.2s;">
+                                <i class="fas fa-bell"></i>
+                                <span>Активные события</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Информация -->
+                <div class="info-footer">
+                    <div class="info-text">
+                        <i class="fas fa-info-circle fa-lg"></i>
+                        <span>Корпоративная система • Бета-версия • Связь с поддержкой: support@gazprom-urengoy.ru</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Добавьте Font Awesome в base.html -->
-<script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+<!-- JavaScript для интерактивности -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Параллакс эффект для блобов
+        document.addEventListener('mousemove', function(e) {
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
+
+            document.querySelectorAll('.blob').forEach((blob, index) => {
+                const speed = (index + 1) * 1.5;
+                const currentTransform = blob.style.transform;
+                const baseTransform = `translate(${x * speed}px, ${y * speed}px)`;
+
+                // Сохраняем оригинальную анимацию blob
+                const animationTransform = currentTransform.includes('blob') ?
+                    currentTransform.match(/translate\(.*?\)/g)[0] : '';
+
+                blob.style.transform = `${baseTransform} ${animationTransform ? animationTransform.replace(/translate\(.*?\)/, '') : ''}`;
+            });
+        });
+
+        // Анимация при скролле
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '100px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+
+                    // Добавляем класс анимации для дочерних элементов
+                    const icon = entry.target.querySelector('.stat-icon');
+                    const number = entry.target.querySelector('.stat-number');
+                    const badge = entry.target.querySelector('.status-badge');
+
+                    if (icon) icon.classList.add('animate-float');
+                    if (number) number.classList.add('animate-pulse');
+                    if (badge) badge.classList.add('animate-pulse');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px) scale(0.95)';
+            observer.observe(card);
+        });
+
+        // Эффект печатания для заголовка
+        const heroTitle = document.querySelector('.hero-title');
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                heroTitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        // Запускаем анимацию после небольшой задержки
+        setTimeout(typeWriter, 800);
+
+        // Эффект волн при наведении на карточки
+        const cards = document.querySelectorAll('.stat-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const wave = document.createElement('div');
+                wave.style.cssText = `
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    background: rgba(0, 153, 255, 0.3);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    transform: translate(-50%, -50%);
+                    animation: waveRipple 1s linear forwards;
+                `;
+
+                wave.style.left = `${x}px`;
+                wave.style.top = `${y}px`;
+
+                // Добавляем keyframes для анимации волны
+                if (!document.querySelector('#waveRippleKeyframes')) {
+                    const style = document.createElement('style');
+                    style.id = 'waveRippleKeyframes';
+                    style.textContent = `
+                        @keyframes waveRipple {
+                            0% {
+                                width: 2px;
+                                height: 2px;
+                                opacity: 1;
+                            }
+                            100% {
+                                width: 300px;
+                                height: 300px;
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                card.appendChild(wave);
+                setTimeout(() => wave.remove(), 1000);
+            });
+        });
+
+        // Эффект свечения для кнопок
+        const buttons = document.querySelectorAll('.gazprom-button');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.boxShadow =
+                    '0 25px 50px rgba(0, 82, 156, 0.4), ' +
+                    '0 0 40px rgba(0, 153, 255, 0.6), ' +
+                    'inset 0 1px 0 rgba(255, 255, 255, 0.3)';
+            });
+
+            button.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Автоматическое обновление анимации
+        let animationFrame;
+        function updateAnimations() {
+            document.querySelectorAll('.animate-float').forEach(el => {
+                const delay = parseFloat(el.style.animationDelay || 0);
+                el.style.animationDelay = `${(delay + 0.1) % 10}s`;
+            });
+
+            animationFrame = requestAnimationFrame(updateAnimations);
+        }
+
+        // Запускаем обновление анимаций
+        setTimeout(() => {
+            animationFrame = requestAnimationFrame(updateAnimations);
+        }, 2000);
+
+        // Очистка при размонтировании
+        window.addEventListener('beforeunload', () => {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+        });
+    });
+</script>
+
+<!-- Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}

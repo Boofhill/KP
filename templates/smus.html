@@ -4,170 +4,345 @@
 
 {% block content %}
 <style>
-    .smus-hero {
-        background: linear-gradient(rgba(0, 82, 156, 0.9), rgba(0, 82, 156, 0.8)), url('https://cchgeu.ru/upload/iblock/58b/foto_gazprom_urengoy_1_.jpg');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 60px 0;
-        margin: -20px -20px 40px -20px;
-        text-align: center;
+    /* Глобальные переменные в стиле главной */
+    :root {
+        --gazprom-dark: #003366;
+        --gazprom-primary: #00529c;
+        --gazprom-light: #0078d7;
+        --gazprom-accent: #0099ff;
+        --gazprom-cyan: #00bfff;
+        --gradient-primary: linear-gradient(135deg, #003366 0%, #00529c 50%, #0078d7 100%);
+        --gradient-secondary: linear-gradient(135deg, #00529c 0%, #0078d7 50%, #0099ff 100%);
+        --gradient-accent: linear-gradient(135deg, #0078d7 0%, #0099ff 50%, #00bfff 100%);
+        --shadow-medium: 0 12px 35px rgba(0, 51, 102, 0.15);
     }
 
-    .smus-hero h1 {
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-bottom: 10px;
+    /* Анимации */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 153, 255, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(0, 153, 255, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 153, 255, 0); }
     }
 
-    .smus-hero p {
-        font-size: 1.2rem;
-        opacity: 0.9;
-    }
-
-    .gazprom-card {
-        background: white;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 82, 156, 0.1);
-        transition: all 0.3s ease;
-        height: 100%;
+    /* Главный контейнер (фон) */
+    .main-container {
+        min-height: 100vh;
+        background: var(--gradient-primary);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        position: relative;
         overflow: hidden;
     }
 
-    .gazprom-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 82, 156, 0.2);
+    /* Анимированный фон (блобы) */
+    .animated-background {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        overflow: hidden;
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.3;
+    }
+
+    .blob-1 {
+        width: 600px; height: 600px;
+        background: var(--gradient-accent);
+        top: -300px; right: -150px;
+    }
+
+    .blob-2 {
+        width: 500px; height: 500px;
+        background: linear-gradient(135deg, var(--gazprom-primary), var(--gazprom-accent));
+        bottom: -200px; left: -150px;
+    }
+
+    /* Стеклянный контент */
+    .glass-content {
+        position: relative;
+        z-index: 2;
+        padding: 40px 0;
+    }
+
+    /* Герой секция (Заголовок) */
+    .smus-hero {
+        padding: 100px 0 60px;
+        text-align: center;
+        position: relative;
+    }
+
+    .smus-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #ffffff 0%, rgba(179, 220, 255, 0.9) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 10px rgba(0, 82, 156, 0.3);
+        letter-spacing: -0.5px;
+        animation: fadeIn 1s ease-out;
+    }
+
+    .smus-hero p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.4rem;
+        font-weight: 300;
+        max-width: 800px;
+        margin: 0 auto;
+        animation: fadeIn 1s ease-out 0.2s both;
+    }
+
+    /* СТЕКЛЯННАЯ КАРТОЧКА (Glass Card) */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        overflow: hidden;
+        color: white; /* Основной цвет текста */
+    }
+
+    .glass-card:hover {
+        transform: translateY(-8px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 153, 255, 0.3);
     }
 
     .card-body {
         padding: 30px 20px;
     }
 
+    /* Фотография участника */
     .member-photo {
-        width: 140px;
-        height: 140px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
-        border: 4px solid #00529c;
-        box-shadow: 0 5px 15px rgba(0, 82, 156, 0.3);
+        border: 5px solid var(--gazprom-cyan);
+        box-shadow: 0 5px 20px rgba(0, 153, 255, 0.5);
+        transition: all 0.4s ease;
+    }
+
+    .glass-card:hover .member-photo {
+        transform: scale(1.05);
+        border-color: #fff;
     }
 
     .no-photo {
-        width: 140px;
-        height: 140px;
-        border: 4px solid #e9ecef;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        width: 150px;
+        height: 150px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
     }
 
+    .no-photo i {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Имя участника */
     .card-title {
-        color: #00529c;
+        color: var(--gazprom-cyan);
         font-weight: bold;
-        font-size: 1.3rem;
-        margin: 20px 0 15px 0;
+        font-size: 1.5rem;
+        margin: 20px 0 10px 0;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 
+    /* Бейдж Должность */
     .position-badge {
-        font-size: 0.9rem;
-        padding: 8px 16px;
-        border-radius: 25px;
-        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 700;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .position-badge i {
+        margin-right: 8px;
+        font-size: 1.1rem;
     }
 
     .badge-predsedatel {
-        background: linear-gradient(45deg, #dc3545, #e35d6a);
+        background: linear-gradient(90deg, #dc3545, #ff5f70);
         color: white;
+        animation: pulse 2s infinite; /* Добавляем анимацию председателю */
     }
 
     .badge-zamestitel {
-        background: linear-gradient(45deg, #ffc107, #ffd54f);
-        color: #000;
+        background: linear-gradient(90deg, #ffc107, #ff9800);
+        color: var(--gazprom-dark);
     }
 
     .badge-chlen {
-        background: linear-gradient(45deg, #17a2b8, #5bc0de);
+        background: linear-gradient(90deg, #17a2b8, #5bc0de);
         color: white;
     }
 
+    /* Информация о работе */
     .member-info {
-        color: #666;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin-top: 15px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-top: 20px;
     }
 
     .member-info strong {
-        color: #00529c;
+        color: var(--gazprom-cyan);
+        font-weight: 600;
     }
 
     .department {
-        color: #28a745;
+        color: var(--gazprom-cyan);
         font-weight: 500;
+        font-size: 1.1rem;
     }
 
     .filial {
-        color: #6c757d;
+        color: rgba(255, 255, 255, 0.6);
         font-style: italic;
+        font-size: 0.95rem;
+    }
+
+    .member-info i {
+        color: var(--gazprom-accent);
+        opacity: 0.9;
+        margin-right: 5px;
+    }
+
+    .empty-state {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 50px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .empty-state i {
+        color: var(--gazprom-cyan);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 992px) {
+        .smus-hero h1 { font-size: 2.8rem; }
+        .smus-hero p { font-size: 1.2rem; }
+        .member-photo, .no-photo { width: 120px; height: 120px; }
+        .card-title { font-size: 1.3rem; }
+    }
+
+    @media (max-width: 768px) {
+        .smus-hero h1 { font-size: 2.2rem; }
+        .glass-card:hover { transform: translateY(-5px); }
     }
 </style>
 
-<div class="smus-hero">
-    <div class="container">
-        <h1><i class="fas fa-users-cog me-3"></i>Совет молодых ученых и специалистов (СМУС)</h1>
-        <p>Профессиональное сообщество молодых лидеров компании</p>
+<div class="main-container">
+    <div class="animated-background">
+        <div class="blob blob-1 animate-float"></div>
+        <div class="blob blob-2"></div>
     </div>
-</div>
 
-<div class="container">
-    <div class="row">
-        {% for member in smus %}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card gazprom-card h-100 text-center">
-                <div class="card-body">
-                    {% if member.employee.photo %}
-                        <img src="{{ member.employee.photo.url }}" class="rounded-circle member-photo mb-3" alt="Фото {{ member.employee.user.get_full_name }}">
-                    {% else %}
-                        <div class="rounded-circle no-photo d-inline-flex align-items-center justify-content-center mb-3">
-                            <i class="fas fa-user fa-3x text-muted"></i>
-                        </div>
-                    {% endif %}
+    <div class="glass-content">
+        <div class="container">
+            <div class="smus-hero">
+                <h1><i class="fas fa-users-cog me-3 animate-float"></i>Совет молодых ученых и специалистов</h1>
+                <p>Профессиональное сообщество молодых лидеров, реализующих инновационные проекты в компании "Газпром добыча Уренгой".</p>
+            </div>
 
-                    <h5 class="card-title">{{ member.employee.user.get_full_name }}</h5>
+            <div class="row">
+                {% for member in smus %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="glass-card h-100 text-center animate-fade-in" style="animation-delay: {{ forloop.counter|add:"0.1" }}s">
+                        <div class="card-body">
+                            {# Фотография участника #}
+                            {% if member.employee.photo %}
+                                <img src="{{ member.employee.photo.url }}" class="rounded-circle member-photo mb-3" alt="Фото {{ member.employee.user.get_full_name }}">
+                            {% else %}
+                                <div class="rounded-circle no-photo d-inline-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-user fa-3x"></i>
+                                </div>
+                            {% endif %}
 
-                    <div class="mb-3">
-                        <span class="position-badge
-                            {% if member.position == 'predsedatel' %}badge-predsedatel
-                            {% elif member.position == 'zamestitel' %}badge-zamestitel
-                            {% else %}badge-chlen{% endif %}">
-                            <i class="fas
-                                {% if member.position == 'predsedatel' %}fa-crown
-                                {% elif member.position == 'zamestitel' %}fa-star
-                                {% else %}fa-user-check{% endif %} me-2"></i>
-                            {{ member.get_position_display }}
-                        </span>
-                    </div>
+                            <h5 class="card-title">{{ member.employee.user.get_full_name }}</h5>
 
-                    <div class="member-info">
-                        <div class="department">
-                            <i class="fas fa-briefcase me-2"></i>
-                            <strong>{{ member.employee.position.name }}</strong>
-                        </div>
-                        <div class="filial mt-2">
-                            <i class="fas fa-building me-2"></i>
-                            {{ member.employee.filial.name }}
+                            {# Должность в СМУС #}
+                            <span class="position-badge
+                                {% if member.position == 'predsedatel' %}badge-predsedatel
+                                {% elif member.position == 'zamestitel' %}badge-zamestitel
+                                {% else %}badge-chlen{% endif %}">
+                                <i class="fas
+                                    {% if member.position == 'predsedatel' %}fa-crown
+                                    {% elif member.position == 'zamestitel' %}fa-star-half-alt
+                                    {% else %}fa-user-check{% endif %}"></i>
+                                {{ member.get_position_display }}
+                            </span>
+
+                            {# Информация о работе #}
+                            <div class="member-info">
+                                <div class="department">
+                                    <i class="fas fa-briefcase"></i>
+                                    {{ member.employee.position.name }}
+                                </div>
+                                <div class="filial mt-2">
+                                    <i class="fas fa-building"></i>
+                                    {{ member.employee.filial.name }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-users-slash fa-3x mb-3"></i>
+                        <h4>Члены СМУС не найдены</h4>
+                        <p class="mb-0">В настоящее время нет активных членов совета</p>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <div class="text-muted">
-                <i class="fas fa-users fa-3x mb-3"></i>
-                <h4>Члены СМУС не найдены</h4>
-                <p>В настоящее время нет активных членов совета</p>
-            </div>
-        </div>
-        {% endfor %}
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Параллакс эффект для блобов
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+
+            const blob1 = document.querySelector('.blob-1');
+            const blob2 = document.querySelector('.blob-2');
+
+            if (blob1) blob1.style.transform = `translate(${x * 1.5}px, ${y * 1.5}px)`;
+            if (blob2) blob2.style.transform = `translate(${-x}px, ${-y}px)`;
+        });
+    });
+</script>
+
 {% endblock %}

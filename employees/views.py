@@ -39,10 +39,10 @@ def glavnaya(request):
 # Все остальные страницы защищаем авторизацией
 @login_required
 def sotrudniki(request):
-    # Получаем всех сотрудников с предзагрузкой связанных данных
+
     employees = Employee.objects.select_related('user', 'filial', 'position').all()
 
-    # Получаем доступные фильтры
+
     filials = Filial.objects.all()
     positions = Position.objects.all()
 
@@ -184,7 +184,7 @@ def reiting(request):
     rating_data.sort(key=lambda x: x['itogovy_ball'], reverse=True)
     return render(request, 'reiting.html', {'rating': rating_data})
 
-# Generic views для CRUD Employee
+
 class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
     template_name = 'employees/employee_list.html'
